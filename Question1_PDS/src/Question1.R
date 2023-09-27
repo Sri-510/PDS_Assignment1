@@ -1,18 +1,15 @@
-library(caret)
-# Load data
-raw_yield_data <- read.csv("C:/Users/DELL/OneDrive/Desktop/SEM1 UMKC/SEM3/PDS/PDS_DATASET1.csv")
 
 # Remove rows with missing values
-cleaned_yield_data <- na.omit(raw_yield_data)
+cleaned_data <- na.omit(raw_data)
 
 # Convert Frailty column to a factor
-cleaned_yield_data$Frailty <- as.factor(cleaned_yield_data$Frailty)
+cleaned_data$Frailty <- as.factor(cleaned_data$Frailty)
 
 # Split data into training and testing sets
 set.seed(123)
-trainIndex <- createDataPartition(cleaned_yield_data$Frailty, p=.7, list=FALSE)
-train <- cleaned_yield_data[trainIndex, ]
-test <- cleaned_yield_data[-trainIndex,]
+trainIndex <- createDataPartition(cleaned_data$Frailty, p=.7, list=FALSE)
+train <- cleaned_data[trainIndex, ]
+test <- cleaned_data[-trainIndex,]
 
 # Fit logistic regression model
 lr_model <- train(Frailty~.,data = train,method ="glm",family ="binomial")
@@ -22,12 +19,12 @@ svm_model <- train(Frailty ~ ., data = train, method = "svmRadial")
 dt_model <- train(Frailty ~ ., data = train, method = "rpart")
 
 # Make predictions on test set
-lr_pred <- predict(lr_model, newdata = test) 
-svm_pred <- predict(svm_model, newdata = test) 
-dt_pred <- predict(dt_model, newdata = test)
+lr_predict <- predict(lr_model, newdata = test) 
+svm_predict <- predict(svm_model, newdata = test) 
+dt_predict <- predict(dt_model, newdata = test)
 
 # To Evaluate performance of models 
-confusionMatrix(lr_pred, test$Frailty)
-confusionMatrix(svm_pred, test$Frailty)
-confusionMatrix(dt_pred, test$Frailty)
+confusionMatrix(lr_predict, test$Frailty)
+confusionMatrix(svm_predict, test$Frailty)
+confusionMatrix(dt_predict, test$Frailty)
 
